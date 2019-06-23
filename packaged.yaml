@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Parameters:
+  Audience:
+    Type: String
+  JwksUri:
+    Type: String
+  TokenIssuer:
+    Type: String
+Resources:
+  Auth0AuthorizerFunction:
+    Properties:
+      CodeUri: s3://auth0-test-nodejs10-artifacts/afd1fc461ccd03910933a7e7e3ec21cd
+      Environment:
+        Variables:
+          AUDIENCE:
+            Ref: Audience
+          JWKS_URI:
+            Ref: JwksUri
+          TOKEN_ISSUER:
+            Ref: TokenIssuer
+      Handler: auth.lambdaHandler
+      Runtime: nodejs10.x
+    Type: AWS::Serverless::Function
+  HelloWorldFunction:
+    Properties:
+      CodeUri: s3://auth0-test-nodejs10-artifacts/ac73eea021e8b491a9159676b4681847
+      Events:
+        HelloWorld:
+          Properties:
+            Method: get
+            Path: /hello
+            RestApiId:
+              Ref: ServerlessAPI
+          Type: Api
+      Handler: app.lambdaHandler
+      Runtime: nodejs10.x
+    Type: AWS::Serverless::Function
+  ServerlessAPI:
+    Properties:
+      Auth:
+        Authorizers:
+          Auth0Authorizer:
+            FunctionArn:
+              Fn::GetAtt:
+              - Auth0AuthorizerFunction
+              - Arn
+            FunctionPayloadType: TOKEN
+            Identity:
+              Header: Authorization
+              ReauthorizeEvery: 0
+              ValidationExpression: ^Bearer [-0-9a-zA-Z\._]*$
+        DefaultAuthorizer: Auth0Authorizer
+      StageName: Dev
+    Type: AWS::Serverless::Api
+Transform: AWS::Serverless-2016-10-31
