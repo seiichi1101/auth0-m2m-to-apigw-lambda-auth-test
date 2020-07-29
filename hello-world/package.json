@@ -16,7 +16,7 @@
     "test": "mocha tests/unit/ tests/bootstrap.js"
   },
   "devDependencies": {
-    "auth0": "^2.17.1",
+    "auth0": "^2.27.1",
     "aws-sdk": "^2.471.0",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
