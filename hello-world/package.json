@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "auth0": "^2.17.1",
-    "aws-sdk": "^2.471.0",
+    "aws-sdk": "^2.814.0",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "mocha": "^6.1.4"
